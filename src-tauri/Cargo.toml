@@ -1,28 +1,23 @@
 [package]
-name = "tauri-desktop-hud"
-version = "0.1.0"
-description = "A prototype to see if Tauri-framework can replace CEF to do Desktop Overlay on Linux, Windows, and macOS"
-authors = ["HidekiAI"]
+name = "tauri-desktop-HUD"
+version = "0.0.0"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[lib]
-# The `_lib` suffix may seem redundant but it is necessary
-# to make the lib name unique and wouldn't conflict with the bin name.
-# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "tauri_desktop_hud_lib"
-crate-type = ["staticlib", "cdylib", "rlib"]
-
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "1.4", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["devtools"] }
-tauri-plugin-opener = "2"
-tauri-plugin-log = "2.0.0-rc"
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-serde_derive = "1.0.219"
-log = "0.4"
+tauri = { version = "1.4", features = ["shell-open"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
