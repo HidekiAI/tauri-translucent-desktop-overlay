@@ -5,6 +5,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
+    "install": "pushd src-tauri && cargo update ; popd ; yarn install",
+    "run": "cargo tauri dev",
     "serve": "vite preview",
     "start": "vite",
     "test": "",

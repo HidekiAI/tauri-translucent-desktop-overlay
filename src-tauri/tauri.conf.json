@@ -5,11 +5,9 @@
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420"
   },
-  "package": {
-    "productName": "tauri-desktop-HUD",
-    "version": "0.1.0",
-    "identifier": "tauri-hud.prototype.codemonkeyninja.dev"
-  },
+  "productName": "tauri-desktop-HUD",
+  "version": "0.1.0",
+  "identifier": "tauri-hud.prototype.codemonkeyninja.dev",
   "app": {
     "windows": [
       {
@@ -21,14 +19,8 @@
       }
     ],
     "security": {
-      "csp": null
-    },
-    "allowlist": {
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      }
+      "csp": null,
+      "capabilities": ["shell:open"]
     }
   },
   "bundle": {
