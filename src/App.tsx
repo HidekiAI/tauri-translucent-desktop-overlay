@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import logo from "./assets/logo.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
@@ -6,10 +6,12 @@ import "./App.css";
 function App() {
   const [greetMsg, setGreetMsg] = createSignal("");
   const [name, setName] = createSignal("");
+  const [showDialog, setShowDialog] = createSignal(false);
 
   async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name: name() }));
+    const msg = await invoke<string>("greet", { name: name() });
+    setGreetMsg(msg);
+    setShowDialog(true);
   }
 
   return (
@@ -45,7 +47,35 @@ function App() {
         <button type="submit">Greet</button>
       </form>
 
-      <p>{greetMsg()}</p>
+      <Show when={showDialog()}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.4)",
+            display: "flex",
+            "align-items": "center",
+            "justify-content": "center",
+            "z-index": 1000,
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "2rem",
+              "border-radius": "8px",
+              "min-width": "300px",
+              "text-align": "center",
+            }}
+          >
+            <p>{greetMsg()}</p>
+            <button onClick={() => setShowDialog(false)}>Close</button>
+          </div>
+        </div>
+      </Show>
     </div>
   );
 }
