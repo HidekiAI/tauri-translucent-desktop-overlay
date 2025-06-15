@@ -1,26 +1,25 @@
 {
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "productName": "tauri-desktop-HUD",
+  "version": "0.1.0",
+  "identifier": "com.hidekiai.desktop-hud",
   "build": {
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:1420"
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
   },
-  "productName": "tauri-desktop-HUD",
-  "version": "0.1.0",
-  "identifier": "tauri-hud.prototype.codemonkeyninja.dev",
   "app": {
     "windows": [
       {
-        "fullscreen": false,
-        "resizable": true,
-        "title": "tauri-desktop-HUD",
+        "title": "Tauri Desktop HUD",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "center": true
       }
     ],
     "security": {
-      "csp": null,
-      "capabilities": ["shell:open"]
+      "csp": null
     }
   },
   "bundle": {
