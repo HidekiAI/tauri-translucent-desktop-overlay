@@ -7,11 +7,25 @@ function App() {
   const [greetMsg, setGreetMsg] = createSignal("");
   const [name, setName] = createSignal("");
   const [showDialog, setShowDialog] = createSignal(false);
+  const [currentUrl, setCurrentUrl] = createSignal("");
+  const [customUrl, setCustomUrl] = createSignal("");
 
   async function greet() {
     const msg = await invoke<string>("greet", { name: name() });
     setGreetMsg(msg);
     setShowDialog(true);
+  }
+
+  async function loadUrl() {
+    const url = await invoke<string>("get_url");
+    setCurrentUrl(url);
+  }
+
+  async function sendCustomUrl() {
+    if (customUrl()) {
+      const url = await invoke<string>("send_custom_url", { url: customUrl() });
+      setCurrentUrl(url);
+    }
   }
 
   return (
@@ -31,6 +45,69 @@ function App() {
       </div>
 
       <p>Click on the Tauri, Vite, and Solid logos to learn more.</p>
+
+      <div class="url-section" style={{ margin: "2rem 0", padding: "1rem", border: "1px solid #ccc", "border-radius": "8px" }}>
+        <h2>Web Content Renderer</h2>
+        
+        <div class="controls" style={{ margin: "1rem 0", display: "flex", gap: "1rem", "align-items": "center", "flex-wrap": "wrap" }}>
+          <button onClick={loadUrl}>Load YouTube Login</button>
+          
+          <form
+            style={{ display: "flex", gap: "0.5rem", "align-items": "center" }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendCustomUrl();
+            }}
+          >
+            <input
+              onChange={(e) => setCustomUrl(e.currentTarget.value)}
+              placeholder="Enter URL (e.g., github.com)..."
+              value={customUrl()}
+              style={{ "min-width": "200px", padding: "0.5rem" }}
+            />
+            <button type="submit">Load URL</button>
+          </form>
+        </div>
+
+        <Show when={currentUrl()}>
+          <div style={{ margin: "1rem 0" }}>
+            <div style={{
+              display: "flex",
+              "justify-content": "space-between",
+              "align-items": "center",
+              padding: "0.5rem",
+              background: "#f0f0f0",
+              "border-radius": "4px 4px 0 0",
+              "font-size": "0.9rem"
+            }}>
+              <span>Rendering: {currentUrl()}</span>
+              <button
+                onClick={() => setCurrentUrl("")}
+                style={{
+                  background: "#ff4444",
+                  color: "white",
+                  border: "none",
+                  padding: "0.25rem 0.5rem",
+                  "border-radius": "3px",
+                  cursor: "pointer"
+                }}
+              >
+                Close
+              </button>
+            </div>
+            <iframe
+              src={currentUrl()}
+              style={{
+                width: "100%",
+                height: "600px",
+                border: "1px solid #ccc",
+                "border-radius": "0 0 4px 4px"
+              }}
+              title="Web Content"
+            />
+          </div>
+        </Show>
+      </div>
 
       <form
         class="row"

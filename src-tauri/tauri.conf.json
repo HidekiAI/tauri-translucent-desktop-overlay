@@ -12,10 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "Tauri Desktop HUD",
-        "width": 800,
-        "height": 600,
-        "center": true
+        "title": "Tauri Desktop HUD - Web Content Renderer",
+        "width": 1200,
+        "height": 800,
+        "center": true,
+        "resizable": true
       }
     ],
     "security": {
