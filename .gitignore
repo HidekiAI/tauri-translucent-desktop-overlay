@@ -42,6 +42,4 @@ target*/
 /target
 
 # mine
-yarn.lock
 dist/
-
