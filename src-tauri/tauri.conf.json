@@ -1,14 +1,14 @@
 {
-  "package": {
-    "productName": "tauri-desktop-HUD",
-    "version": "0.1.0",
-    "identifier": "tauri-hud.prototype.codemonkeyninja.dev"
-  },
   "build": {
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420"
+  },
+  "package": {
+    "productName": "tauri-desktop-HUD",
+    "version": "0.1.0",
+    "identifier": "tauri-hud.prototype.codemonkeyninja.dev"
   },
   "app": {
     "windows": [
