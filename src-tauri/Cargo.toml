@@ -2,8 +2,8 @@
 name = "tauri-desktop-HUD"
 version = "0.0.0"
 description = "A Tauri App"
-authors = ["you"]
-license = ""
+authors = ["HidekiAI"]
+license = "MIT"
 repository = ""
 edition = "2021"
 
