@@ -1,3 +1,5 @@
+/* Font: Liberation Sans — SIL Open Font License, pre-installed on most Linux systems */
+
 .hud-root {
   width: 100%;
   display: flex;
@@ -5,21 +7,17 @@
 }
 
 .subtitle-box {
-  background: rgba(10, 10, 10, 0.72);
   border-radius: 6px;
   padding: 0.45em 1.2em;
   max-width: 90%;
 }
 
 .subtitle-text {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 24px;
+  font-family: "Liberation Sans", "DejaVu Sans", Arial, sans-serif;
   font-weight: bold;
-  color: #f5e642;
   text-shadow:
     0 0 6px rgba(0, 0, 0, 0.9),
     2px 2px 4px rgba(0, 0, 0, 0.8),
     -1px -1px 3px rgba(0, 0, 0, 0.6);
-  white-space: nowrap;
   line-height: 1.4;
 }

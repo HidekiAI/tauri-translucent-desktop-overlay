@@ -13,11 +13,10 @@
     "windows": [
       {
         "title": "Tauri Desktop HUD",
-        "width": 600,
-        "height": 300,
+        "width": 800,
+        "height": 120,
         "transparent": true,
         "decorations": false,
-        "center": true,
         "resizable": true
       }
     ],
