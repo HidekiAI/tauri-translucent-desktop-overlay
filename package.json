@@ -7,14 +7,14 @@
     "dev": "vite",
     "run:tauri": "cargo tauri dev",
     "serve": "vite preview",
-    "setup": "pushd src-tauri && cargo update && popd && yarn install",
+    "setup": "pushd src-tauri && cargo update && popd && pnpm install",
     "start": "vite",
     "test": "",
     "tauri": "tauri"
   },
   "license": "MIT",
   "dependencies": {
-    "@tauri-apps/api": "^1.4.0",
+    "@tauri-apps/api": "^2.0.0",
     "solid-js": "^1.7.8"
   },
   "devDependencies": {

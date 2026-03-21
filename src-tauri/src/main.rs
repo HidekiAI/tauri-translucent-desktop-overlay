@@ -1,31 +1,50 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+use serde::Deserialize;
+use std::fs;
+use tauri::Manager;
+
+#[derive(Deserialize)]
+struct HudConfig {
+    #[serde(default = "default_width")]
+    width: f64,
+    #[serde(default = "default_height")]
+    height: f64,
 }
 
-#[tauri::command]
-fn get_url() -> String {
-    // Return YouTube login page URL
-    "https://accounts.google.com/signin/v2/identifier?service=youtube".to_string()
+fn default_width() -> f64 {
+    600.0
+}
+fn default_height() -> f64 {
+    300.0
 }
 
-#[tauri::command]
-fn send_custom_url(url: &str) -> String {
-    // Validate and return the URL
-    if url.starts_with("http://") || url.starts_with("https://") {
-        url.to_string()
-    } else {
-        format!("https://{}", url)
+impl Default for HudConfig {
+    fn default() -> Self {
+        Self {
+            width: default_width(),
+            height: default_height(),
+        }
     }
 }
 
 fn main() {
+    let config: HudConfig = fs::read_to_string("hud_config.json")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, get_url, send_custom_url])
+        .setup(move |app| {
+            if let Some(win) = app.get_webview_window("main") {
+                let _ = win.set_size(tauri::Size::Logical(tauri::LogicalSize {
+                    width: config.width,
+                    height: config.height,
+                }));
+            }
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
