@@ -4,17 +4,15 @@
   "version": "0.1.0",
   "identifier": "com.hidekiai.desktop-hud",
   "build": {
-    "beforeDevCommand": "pnpm dev",
-    "beforeBuildCommand": "pnpm build",
-    "devUrl": "http://localhost:1420",
-    "frontendDist": "../dist"
+    "frontendDist": "../ui"
   },
   "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "title": "Tauri Desktop HUD",
         "width": 800,
-        "height": 120,
+        "height": 200,
         "transparent": true,
         "decorations": false,
         "resizable": true

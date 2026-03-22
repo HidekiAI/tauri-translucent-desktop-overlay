@@ -3,24 +3,10 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite",
-    "run:tauri": "cargo tauri dev",
-    "serve": "vite preview",
-    "setup": "pushd src-tauri && cargo update && popd && pnpm install",
-    "start": "vite",
-    "test": "",
-    "tauri": "tauri"
+    "run:tauri": "cargo tauri dev"
   },
   "license": "MIT",
-  "dependencies": {
-    "@tauri-apps/api": "^2.0.0",
-    "solid-js": "^1.7.8"
-  },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.5.0",
-    "typescript": "^5.0.2",
-    "vite": "^6.3.5",
-    "vite-plugin-solid": "^2.7.0"
+    "@tauri-apps/cli": "^2.5.0"
   }
 }

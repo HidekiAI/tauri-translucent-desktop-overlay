@@ -4,10 +4,8 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential libssl-dev
 
 cargo install tauri-cli --version "^2.0.0" --locked
 
-pushd src-tauri/ 
-cargo update 
-popd 
+pushd src-tauri/
+cargo update
+popd
 
-pnpm install
-
-cargo tauri dev ;
+cargo tauri dev

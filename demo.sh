@@ -2,44 +2,60 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEXT_FILE="$SCRIPT_DIR/hud_text.txt"
+UDP_PORT=$(jq -r '.udp_port // 7331' "${SCRIPT_DIR}/hud_config.json" 2>/dev/null || echo 7331)
 ORIGINAL_TEXT="Hello world, Hello Shiroe!"
-LOREM_WIDE="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore."
+LOREM_WIDE="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 
-# Restore original text on exit/interrupt
-cleanup() {
-    echo "$ORIGINAL_TEXT" > "$TEXT_FILE"
+# Ensure netcat (with UDP support) is installed
+if [ ! -e "$(which nc 2>/dev/null)" ]; then
+    echo "netcat not found, installing netcat-openbsd..."
+    sudo apt install -y netcat-openbsd
+fi
+
+# Send a string to the HUD over UDP loopback
+send_hud() {
+    printf '%s' "$1" | nc -u -w1 127.0.0.1 "$UDP_PORT"
 }
-trap cleanup EXIT INT TERM
 
-# Launch the app in the background
-echo "$ORIGINAL_TEXT" > "$TEXT_FILE"
+# Kill any existing HUD instances before starting a fresh one
+pkill -f "tauri-desktop-HUD" 2>/dev/null || true
+pkill -f "cargo-tauri" 2>/dev/null || true
+sleep 2
+
+# Launch the app in the background with full backtraces on panic
 cd "$SCRIPT_DIR"
-pnpm run:tauri &
+RUST_BACKTRACE=1 cargo tauri dev &
 APP_PID=$!
 
-# Give the app time to start and render
+# Wait until the UDP port is ready (app finished compiling and started)
+echo "Waiting for app to start..."
+until printf '' | nc -u -w1 127.0.0.1 "$UDP_PORT" 2>/dev/null && ss -ulnp | grep -q ":${UDP_PORT}"; do
+    sleep 1
+done
+echo "App ready."
+sleep 1
+
+send_hud "Get ready..."
+sleep 1
+
+send_hud "3"
+sleep 1
+
+send_hud "2"
+sleep 1
+
+send_hud "1"
+sleep 1
+
+# Long line — triggers min_font_size shrink if min_font_size_pt > 0 in hud_config.json
+send_hud "$LOREM_WIDE"
 sleep 3
 
-echo "Get ready..." > "$TEXT_FILE"
-sleep 1
-
-echo "3" > "$TEXT_FILE"
-sleep 1
-
-echo "2" > "$TEXT_FILE"
-sleep 1
-
-echo "1" > "$TEXT_FILE"
-sleep 1
-
-echo "$LOREM_WIDE" > "$TEXT_FILE"
-sleep 3
-
-echo "$ORIGINAL_TEXT" > "$TEXT_FILE"
+send_hud "$ORIGINAL_TEXT"
 sleep 3
 
 kill "$APP_PID" 2>/dev/null
+pkill -f "tauri-desktop-HUD" 2>/dev/null || true
 wait "$APP_PID" 2>/dev/null
 
 echo "Demo complete."
