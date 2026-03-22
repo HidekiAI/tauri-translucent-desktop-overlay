@@ -77,6 +77,80 @@ printf 'Line one\nLine two' | nc -u -w1 127.0.0.1 7331
 
 Each UDP datagram is one complete message. The port is configurable via `udp_port` in `hud_config.json`.
 
+## Troubleshooting: window not transparent (X11 compositor)
+
+### Symptom
+
+The HUD window background appears opaque or dark instead of showing the desktop through it. This happens on X11 sessions using a compositor that does not correctly handle ARGB (per-pixel alpha) windows — most commonly **xfwm4** (the default XFCE window manager).
+
+### Root cause
+
+xfwm4's built-in compositor uses alpha-blend-over accumulation: each new semi-transparent frame is blended *on top of the previous compositor buffer* rather than composited fresh against the desktop. The result is that transparent areas fill up with accumulated dark content over time instead of showing what is behind the window.
+
+### Diagnosis
+
+Check which compositor is running:
+
+```bash
+ps auxf | grep -E "picom|compton|xfwm|mutter|kwin|openbox"
+```
+
+If you see `xfwm4` and **no** `picom`/`compton`, this is likely your issue.
+
+Also confirm you are on X11 (not Wayland):
+
+```bash
+echo $XDG_SESSION_TYPE   # should print "x11"
+echo $WAYLAND_DISPLAY    # should be empty
+```
+
+### Fix: replace xfwm4's compositor with picom
+
+**1. Install picom:**
+
+```bash
+sudo apt install -y picom
+```
+
+**2. Disable xfwm4's built-in compositor:**
+
+```bash
+xfconf-query -c xfwm4 -p /general/use_compositing -s false
+```
+
+**3. Start picom with the GLX backend:**
+
+```bash
+picom --backend glx --no-use-damage &
+```
+
+`--no-use-damage` forces full-surface redraws, which prevents ghost pixels when text changes.
+
+**4. Restart the HUD** so the window is registered under the new compositor:
+
+```bash
+pkill -f "tauri-desktop-HUD"; cargo tauri dev
+```
+
+### Make picom start automatically
+
+In XFCE: **Session and Startup → Application Autostart → Add**
+
+- Name: `picom`
+- Command: `picom --backend glx --no-use-damage`
+
+Leave xfwm4 compositing disabled permanently.
+
+### Alternative: xrender backend
+
+If GLX is unavailable (e.g. no hardware acceleration), use xrender instead:
+
+```bash
+picom --backend xrender --no-use-damage &
+```
+
+---
+
 ## IDE Setup
 
 [VS Code](https://code.visualstudio.com/) +
