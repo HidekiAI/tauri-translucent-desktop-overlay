@@ -3355,10 +3355,12 @@ dependencies = [
 name = "tauri-desktop-HUD"
 version = "0.0.0"
 dependencies = [
+ "raw-window-handle",
  "serde",
  "serde_json",
  "tauri",
  "tauri-build",
+ "x11",
 ]
 
 [[package]]

@@ -4,18 +4,22 @@
   box-sizing: border-box;
 }
 
-html {
+html, body {
   width: 100%;
   height: 100%;
-  /* A non-zero background on html (not body) means WebKit must paint every
-     pixel when body is hidden — used to flush ghost pixels from compositor. */
-  background: rgba(0, 0, 0, 0.02);
 }
 
-body {
-  width: 100%;
-  height: 100%;
+html {
   background: transparent;
+}
+
+/* Near-zero (not zero) background forces WebKit to write pixels to the X11
+   surface for the entire window area.  Without this, WebKit's dirty-rect
+   optimiser treats "transparent → transparent" as a no-op and skips
+   overwriting old text pixels — the root cause of ghost-text artifacts.
+   At ~2% opacity this tint is completely invisible in practice. */
+body {
+  background: rgba(10, 10, 10, 0.02);
 }
 
 #root {
